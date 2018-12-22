@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <playlist>
+        <playitem name="Example 1" path="http://url.to/stream"/>
+        <playitem name="Example 2" path="http://url.to/stream"/>
+    </playlist>
+</config>
