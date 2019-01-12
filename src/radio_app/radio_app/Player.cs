@@ -8,7 +8,6 @@ namespace radio_app
     public static class Player
     {
         static List<PlayItem> playlist = new List<PlayItem>();
-        static bool _isplaying = false;
         static PlayItem _current;
         static Process ffplay;
         const string ff_args = "-loglevel quiet -nodisp ";
@@ -28,7 +27,7 @@ namespace radio_app
 
         static void ChangeItem()
         {
-            if (!_isplaying) return;
+            if (!IsPlaying) return;
             if (ffplay != null)
             {
                 ffplay.Refresh();
@@ -49,18 +48,18 @@ namespace radio_app
                 if (ffplay.HasExited)
                 {
                     ffplay = Process.Start("ffplay", ff_args + _current.Path);
-                    _isplaying = true;
+                    IsPlaying = true;
                 }
                 else
                 {
                     ffplay.Kill();
-                    _isplaying = false;
+                    IsPlaying = false;
                 }
             }
             else
             {
                 ffplay = Process.Start("ffplay", ff_args + _current.Path);
-                _isplaying = true;
+                IsPlaying = true;
             }
         }
 
@@ -94,10 +93,7 @@ namespace radio_app
             ChangeItem();
         }
 
-        public static bool IsPlaying
-        {
-            get => _isplaying;
-        }
+        public static bool IsPlaying { get; private set; } = false;
 
         public static string Current
         {

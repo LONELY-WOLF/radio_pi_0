@@ -12,17 +12,10 @@ namespace radio_app
 {
     class MainClass
     {
-        static int a_frame = 0;
-        static Bitmap bootlogo;
-        static bool showStation = false;
-
         public static void Main(string[] args)
         {
-            bootlogo = new Bitmap("bootlogo.gif");
-            Display.Init();
-
-            Thread anim_thread = new Thread(ShowAnimation);
-            anim_thread.Start();
+            ScreenManager.Init("config.xml");
+            ScreenManager.BeginAnimation();
 
             Player.LoadXML("config.xml");
 
@@ -82,64 +75,12 @@ namespace radio_app
                 }
             }
 
-            anim_thread.Join();
-
-            Timer t = new Timer(TimerCallback, null, 0, 1000);
+            ScreenManager.EndAnimation();
 
             while (true)
             {
                 Thread.Sleep(100);
             }
-        }
-
-        private static void TimerCallback(Object o)
-        {
-            DateTime dt = DateTime.UtcNow.AddHours(3);
-            #region Screensaver
-            int x = 0, y = 0;
-            int m = dt.Minute;
-            if (m < 19)
-            {
-                x = 0;
-                y = m;
-            }
-            else if (m < 30)
-            {
-                x = m - 19;
-                y = 19;
-            }
-            else if (m < 49)
-            {
-                x = 11;
-                y = 49 - m;
-            }
-            else if (m < 60)
-            {
-                x = 60 - m;
-                y = 0;
-            }
-            #endregion
-            string tm = dt.ToString("HH:mm");
-            Display.ClearFB();
-            Display.DrawTimeChar(tm[0], x, y);
-            Display.DrawTimeChar(tm[1], x + 20, y);
-            if (DateTime.UtcNow.Second % 2 == 0)
-            {
-                Display.DrawTimeChar(' ', x + 40, y);
-            }
-            else
-            {
-                Display.DrawTimeChar(':', x + 40, y);
-            }
-            Display.DrawTimeChar(tm[3], x + 48, y);
-            Display.DrawTimeChar(tm[4], x + 68, y);
-            Display.DrawText(dt.ToString("dd/MM"), x + 88, y + 22);
-            if (Player.IsPlaying || showStation)
-            {
-                Display.DrawText(Player.Current, 0, 52);
-                showStation = false;
-            }
-            Display.FlushBuffer();
         }
 
         static void InputReceiverM_Received(object sender, EventArgs e)
@@ -166,6 +107,7 @@ namespace radio_app
                         case 205:
                             {
                                 Player.PlayStop();
+                                ScreenManager.DrawHomeScreen();
                                 break;
                             }
                         case 226:
@@ -209,14 +151,16 @@ namespace radio_app
                             {
                                 Console.WriteLine("PgUp");
                                 Player.Next();
-                                showStation = true;
+                                ScreenManager.ShowStation = 3;
+                                ScreenManager.DrawHomeScreen();
                                 break;
                             }
                         case 78:
                             {
                                 Console.WriteLine("PgDn");
                                 Player.Prev();
-                                showStation = true;
+                                ScreenManager.ShowStation = 3;
+                                ScreenManager.DrawHomeScreen();
                                 break;
                             }
                         case 79:
@@ -246,17 +190,6 @@ namespace radio_app
                             }
                     }
                 }
-            }
-        }
-
-        static void ShowAnimation()
-        {
-            for (a_frame = 0; a_frame <= 100; a_frame++)
-            {
-                bootlogo.SelectActiveFrame(FrameDimension.Time, a_frame);
-                Display.DrawDirect(bootlogo);
-                a_frame += 1;
-                Thread.Sleep(100);
             }
         }
     }

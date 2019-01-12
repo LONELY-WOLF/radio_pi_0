@@ -10,25 +10,20 @@ namespace radio_app
     public static class Display
     {
         static FileStream spi;
-        static Bitmap fb, timeFont, textFont;
-        static Graphics g_fb;
-        static string charset = " !\"#$%&'()*+,-./" +
-                                "0123456789:;<=>?" +
-                                "@ABCDEFGHIJKLMNO" +
-                                "PQRSTUVWXYZ[\\]^_" +
-                                "`abcdefghijklmno" +
-                                "pqrstuvwxyz{|}~ ";
+        static Bitmap fb;
+        public static Graphics g_fb;
+        static Mutex mtx = new Mutex();
 
         public static void Init()
         {
+            mtx.WaitOne();
+
             fb = new Bitmap(128, 64);
             g_fb = Graphics.FromImage(fb);
             g_fb.InterpolationMode = InterpolationMode.NearestNeighbor;
             g_fb.SmoothingMode = SmoothingMode.None;
             g_fb.PixelOffsetMode = PixelOffsetMode.Half;
             g_fb.CompositingQuality = CompositingQuality.AssumeLinear;
-            timeFont = new Bitmap("time_font.png");
-            textFont = new Bitmap("Dangen_charset_6x12.png");
 
             //GPIO Init
             if (!File.Exists("/sys/class/gpio/gpio2/direction"))
@@ -63,14 +58,16 @@ namespace radio_app
             ClearFB();
             FlushBuffer();
             SendCmd(0xAF);
+
+            mtx.ReleaseMutex();
         }
 
-        public static bool Reset
+        static bool Reset
         {
             set => File.WriteAllText("/sys/class/gpio/gpio10/value", value ? "1" : "0");
         }
 
-        public static bool CommandMode
+        static bool CommandMode
         {
             set
             {
@@ -79,14 +76,14 @@ namespace radio_app
             }
         }
 
-        public static void SendCmd(byte cmd)
+        static void SendCmd(byte cmd)
         {
             CommandMode = true;
             spi.WriteByte(cmd);
             spi.Flush();
         }
 
-        public static void SendCmd(byte cmd0, byte cmd1)
+        static void SendCmd(byte cmd0, byte cmd1)
         {
             CommandMode = true;
             spi.WriteByte(cmd0);
@@ -94,7 +91,7 @@ namespace radio_app
             spi.Flush();
         }
 
-        public static void SendCmd(byte cmd0, byte cmd1, byte cmd2)
+        static void SendCmd(byte cmd0, byte cmd1, byte cmd2)
         {
             CommandMode = true;
             spi.WriteByte(cmd0);
@@ -105,6 +102,8 @@ namespace radio_app
 
         public static void FlushBuffer()
         {
+            mtx.WaitOne();
+
             SendCmd(0x21, 0, 127);
             SendCmd(0x22, 0, 7);
 
@@ -125,57 +124,46 @@ namespace radio_app
                 }
             }
             spi.Flush();
+
+            mtx.ReleaseMutex();
         }
 
         public static void Clear()
         {
+            mtx.WaitOne();
+
             CommandMode = false;
             for (int i = 0; i < 1024; i++)
             {
                 spi.WriteByte(0);
             }
             spi.Flush();
-        }
 
-        public static void DrawTimeChar(char c, int x, int y)
-        {
-            if (c == ':')
-            {
-                g_fb.DrawImage(timeFont, new Rectangle(x, y, 4, 32), new Rectangle(170, 0, 4, 32), GraphicsUnit.Pixel);
-                return;
-            }
-            if (c == ' ')
-            {
-                //g_fb.FillRectangle(new SolidBrush(Color.White), new Rectangle(x, y + 4, 4, 12));
-                return;
-            }
-            g_fb.DrawImage(timeFont, new Rectangle(x, y, 16, 32), new Rectangle((c - '0') * 17, 0, 16, 32), GraphicsUnit.Pixel);
+            mtx.ReleaseMutex();
         }
 
         public static void ClearFB()
         {
-            g_fb.Clear(Color.White);
-        }
+            mtx.WaitOne();
 
-        public static void DrawText(string text, int x, int y)
-        {
-            for (int i = 0; i < text.Length; i++)
-            {
-                int cx = charset.IndexOf(text[i]);
-                if (cx == -1) continue;
-                int cy = cx / 16;
-                cx = cx % 16;
-                g_fb.DrawImage(textFont, new Rectangle(x + (i * 6), y, 6, 12), new Rectangle(cx * 6, cy * 12, 6, 12), GraphicsUnit.Pixel);
-            }
+            g_fb.Clear(Color.White);
+
+            mtx.ReleaseMutex();
         }
 
         public static void DrawImage(Bitmap img, int x, int y)
         {
+            mtx.WaitOne();
+
             g_fb.DrawImageUnscaled(img, x, y);
+
+            mtx.ReleaseMutex();
         }
 
         public static void DrawDirect(Bitmap img)
         {
+            mtx.WaitOne();
+
             SendCmd(0x21, 0, 127);
             SendCmd(0x22, 0, 7);
 
@@ -196,6 +184,8 @@ namespace radio_app
                 }
             }
             spi.Flush();
+
+            mtx.ReleaseMutex();
         }
     }
 }
