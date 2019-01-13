@@ -92,6 +92,7 @@ namespace radio_app
             {
                 if (inputReportBuffer[1] != 0)
                 {
+                    Console.WriteLine(inputReportBuffer[1]);
                     switch (inputReportBuffer[1])
                     {
                         case 35:
@@ -145,6 +146,19 @@ namespace radio_app
                         case 40:
                             {
                                 Console.WriteLine("Ok");
+                                switch (ScreenManager.Mode)
+                                {
+                                    case ScreenManager.ScreenMode.Home:
+                                        {
+                                            ScreenManager.SetTorchMode(true);
+                                            break;
+                                        }
+                                    case ScreenManager.ScreenMode.Torch:
+                                        {
+                                            ScreenManager.SetTorchMode(false);
+                                            break;
+                                        }
+                                }
                                 break;
                             }
                         case 75:

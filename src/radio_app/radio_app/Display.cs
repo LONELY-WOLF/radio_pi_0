@@ -187,5 +187,30 @@ namespace radio_app
 
             mtx.ReleaseMutex();
         }
+
+        public static void SetContrast(byte value)
+        {
+            mtx.WaitOne();
+
+            SendCmd(0x81, value);
+
+            mtx.ReleaseMutex();
+        }
+
+        public static void SetAllOn(bool on)
+        {
+            mtx.WaitOne();
+
+            if(on)
+            {
+                SendCmd(0xA5);
+            }
+            else
+            {
+                SendCmd(0xA4);
+            }
+
+            mtx.ReleaseMutex();
+        }
     }
 }

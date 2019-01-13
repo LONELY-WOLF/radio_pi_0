@@ -17,10 +17,11 @@ namespace radio_app
                                     "PQRSTUVWXYZ[\\]^_" +
                                     "`abcdefghijklmno" +
                                     "pqrstuvwxyz{|}~ ";
-        static Timer home_timer;
+        static Timer home_timer, torch_timer;
         public static byte ShowStation = 0;
         static System.Threading.Thread anim_thread;
         static int a_frame = 0;
+        static byte torch_brightness = 128;
 
         public static void Init(string config_path)
         {
@@ -35,15 +36,29 @@ namespace radio_app
             bootlogo = new Bitmap(bootgif.Value);
             anim_pause = int.Parse(bootgif.Attribute(XName.Get("pause")).Value);
 
+            XElement torch = config.Root.Element(XName.Get("torch"));
+            torch_brightness = byte.Parse(torch.Attribute(XName.Get("brightness")).Value);
+            int torch_duration = int.Parse(torch.Attribute(XName.Get("duration")).Value);
+
             home_timer = new Timer(1000);
             home_timer.Elapsed += Home_Timer_Elapsed;
             home_timer.Start();
+
+            torch_timer = new Timer(torch_duration * 1000);
+            torch_timer.AutoReset = false;
+            torch_timer.Elapsed += Torch_Timer_Elapsed;
         }
 
         static void Home_Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             DrawHomeScreen();
         }
+
+        static void Torch_Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            SetTorchMode(false);
+        }
+
 
         public static void DrawHomeScreen()
         {
@@ -128,6 +143,24 @@ namespace radio_app
             }
         }
 
+        static public void SetTorchMode(bool on)
+        {
+            if (on)
+            {
+                Mode = ScreenMode.Torch;
+                Display.SetAllOn(true);
+                Display.SetContrast(torch_brightness);
+                torch_timer.Start();
+            }
+            else
+            {
+                torch_timer.Stop();
+                Display.SetContrast(0x00);
+                Display.SetAllOn(false);
+                Mode = ScreenMode.Home;
+            }
+        }
+
         public static void DrawText(string text, int x, int y)
         {
             for (int i = 0; i < text.Length; i++)
@@ -160,6 +193,7 @@ namespace radio_app
             Bootlogo,
             Home,
             Menu,
+            Torch,
             None
         }
     }

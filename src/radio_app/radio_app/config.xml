@@ -5,6 +5,7 @@
         <main>Dangen_charset_6x12.png</main>
     </fonts>
     <bootlogo pause="120">bootlogo.gif</bootlogo>
+    <torch duration="15" brightness="128"/>
     <playlist>
         <playitem name="Example 1" path="http://url.to/stream"/>
         <playitem name="Example 2" path="http://url.to/stream"/>
