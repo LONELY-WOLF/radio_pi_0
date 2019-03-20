@@ -54,7 +54,9 @@ namespace radio_app
             SendCmd(0xDA, 0x12);
             SendCmd(0xA6);
             SendCmd(0xA4);
-            SendCmd(0x81, 0x00);
+            SendCmd(0x81, 0x00); // Contrast = 0
+            SendCmd(0xD9, 0x27); // Pre-charge 2 up, 7 down
+            SendCmd(0xDB, 0x00); // Vcomm = 0
             ClearFB();
             FlushBuffer();
             SendCmd(0xAF);
