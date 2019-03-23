@@ -3,9 +3,9 @@ Device for playing Internet radio stations.
 
 ## Hardware
 #### Orange Pi Zero
-Just a regular [Orange Pi Zero](http://www.orangepi.org/orangepizero/) board. Not R1, not Plus, not Plus2...
+[Orange Pi Zero](http://www.orangepi.org/orangepizero/) or [Orange Pi Zero Plus](http://www.orangepi.org/OrangePiZeroPlus/) board.  H2+ and 256MB RAM should be enough but it's up to you which board to choose.
 
-256MB RAM should be enough but it's up to you which board to choose.
+R1 and Plus2 have no USB A connector. You need to modify interconnection PCB to use these boards.
 
 #### SPI OLED
 [diymore.cc 2.42" 128x64 SPI OLED](https://www.diymore.cc/products/2-42-inch-12864-oled-display-module-iic-i2c-spi-serial-for-arduino-c51-stm32-green-white-blue-yellow).
