@@ -10,7 +10,7 @@ namespace radio_app
         static List<PlayItem> playlist = new List<PlayItem>();
         static PlayItem _current;
         static Process ffplay;
-        const string ff_args = "-loglevel quiet -nodisp ";
+        const string ff_args = "-loglevel quiet -nodisp -reconnect 1 -reconnect_at_eof 1 -reconnect_streamed 1 -reconnect_delay_max 300 ";
 
         public static void LoadXML(string path)
         {
