@@ -65,43 +65,59 @@ namespace radio_app
 
         public static void Next()
         {
-            int i = playlist.IndexOf(_current);
-            if (i < playlist.Count - 1)
-            {
-                i++;
-            }
-            else
-            {
-                i = 0;
-            }
-            _current = playlist[i];
+            _current = NextStation;
             ChangeItem();
         }
 
         public static void Prev()
         {
-            int i = playlist.IndexOf(_current);
-            if (i > 0)
-            {
-                i--;
-            }
-            else
-            {
-                i = playlist.Count - 1;
-            }
-            _current = playlist[i];
+            _current = PrevStation;
             ChangeItem();
         }
 
         public static bool IsPlaying { get; private set; } = false;
 
-        public static string Current
+        public static PlayItem CurrentStation
         {
-            get => _current.Name;
+            get => _current;
+        }
+
+        public static PlayItem NextStation
+        {
+            get
+            {
+                int i = playlist.IndexOf(_current);
+                if (i < playlist.Count - 1)
+                {
+                    i++;
+                }
+                else
+                {
+                    i = 0;
+                }
+                return playlist[i];
+            }
+        }
+
+        public static PlayItem PrevStation
+        {
+            get
+            {
+                int i = playlist.IndexOf(_current);
+                if (i > 0)
+                {
+                    i--;
+                }
+                else
+                {
+                    i = playlist.Count - 1;
+                }
+                return playlist[i];
+            }
         }
     }
 
-    struct PlayItem
+    public struct PlayItem
     {
         public string Name, Path;
     }

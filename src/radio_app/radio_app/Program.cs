@@ -108,7 +108,8 @@ namespace radio_app
                         case 205:
                             {
                                 Player.PlayStop();
-                                ScreenManager.DrawHomeScreen();
+                                ScreenManager.ShowStation = 3;
+                                ScreenManager.DrawStationList();
                                 break;
                             }
                         case 226:
@@ -164,17 +165,17 @@ namespace radio_app
                         case 75:
                             {
                                 Console.WriteLine("PgUp");
-                                Player.Next();
+                                Player.Prev();
                                 ScreenManager.ShowStation = 3;
-                                ScreenManager.DrawHomeScreen();
+                                ScreenManager.DrawStationList();
                                 break;
                             }
                         case 78:
                             {
                                 Console.WriteLine("PgDn");
-                                Player.Prev();
+                                Player.Next();
                                 ScreenManager.ShowStation = 3;
-                                ScreenManager.DrawHomeScreen();
+                                ScreenManager.DrawStationList();
                                 break;
                             }
                         case 79:

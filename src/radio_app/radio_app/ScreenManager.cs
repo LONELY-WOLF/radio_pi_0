@@ -22,6 +22,9 @@ namespace radio_app
         static System.Threading.Thread anim_thread;
         static int a_frame = 0;
         static byte torch_brightness = 128;
+        static Point pos = new Point(0, 0);
+        static Point vel = new Point(1, 1);
+        static DateTime dt_prev = DateTime.UtcNow.AddHours(-10);
 
         public static void Init(string config_path)
         {
@@ -51,7 +54,28 @@ namespace radio_app
 
         static void Home_Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            DrawHomeScreen();
+            if (ShowStation > 0)
+            {
+                Mode = ScreenMode.StationSelect;
+                ShowStation--;
+            }
+            else if(Mode == ScreenMode.StationSelect)
+            {
+                Mode = ScreenMode.Home;
+            }
+            switch (Mode)
+            {
+                case ScreenMode.Home:
+                    {
+                        DrawHomeScreen();
+                        break;
+                    }
+                case ScreenMode.StationSelect:
+                    {
+                        DrawStationList();
+                        break;
+                    }
+            }
         }
 
         static void Torch_Timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -65,54 +89,78 @@ namespace radio_app
             if (Mode != ScreenMode.Home) return;
 
             DateTime dt = DateTime.UtcNow.AddHours(3);
+            string tm = dt.ToString("HH:mm");
+            int off = (tm[0] == '0') ? 0 : 20;
             #region Screensaver
-            int x = 0, y = 0;
-            int m = dt.Minute;
-            if (m < 19)
+            if ((dt - dt_prev).TotalSeconds > 0.9)
             {
-                x = 0;
-                y = m;
-            }
-            else if (m < 30)
-            {
-                x = m - 19;
-                y = 19;
-            }
-            else if (m < 49)
-            {
-                x = 11;
-                y = 49 - m;
-            }
-            else if (m < 60)
-            {
-                x = 60 - m;
-                y = 0;
+                dt_prev = dt;
+                pos.X = pos.X + vel.X;
+                pos.Y = pos.Y + vel.Y;
+
+                if(vel.X > 0)
+                {
+                    if(pos.X + 64 + off > 127)
+                    {
+                        vel.X = -1;
+                        if(pos.X + 64 + off > 128)
+                        {
+                            pos.X = 64 - off;
+                        }
+                    }
+                }
+                else
+                {
+                    if (pos.X < 1)
+                    {
+                        vel.X = 1;
+                    }
+                }
+                if(vel.Y > 0)
+                {
+                    if (pos.Y + 31 > 63)
+                    {
+                        vel.Y = -1;
+                    }
+                }
+                else
+                {
+                    if(pos.Y < 1)
+                    {
+                        vel.Y = 1;
+                    }
+                }
+
             }
             #endregion
-            string tm = dt.ToString("HH:mm");
 
             Display.ClearFB();
-            DrawTimeChar(tm[0], x, y);
-            DrawTimeChar(tm[1], x + 20, y);
+            if (off != 0)
+            {
+                DrawTimeChar(tm[0], pos.X, pos.Y);
+            }
+            DrawTimeChar(tm[1], pos.X + off, pos.Y);
             if (DateTime.UtcNow.Second % 2 == 0)
             {
-                DrawTimeChar(' ', x + 40, y);
+                DrawTimeChar(' ', pos.X + off + 20, pos.Y);
             }
             else
             {
-                DrawTimeChar(':', x + 40, y);
+                DrawTimeChar(':', pos.X + off + 20, pos.Y);
             }
-            DrawTimeChar(tm[3], x + 48, y);
-            DrawTimeChar(tm[4], x + 68, y);
-            DrawText(dt.ToString("dd/MM"), x + 88, y + 22);
-            if (Player.IsPlaying || (ShowStation > 0))
-            {
-                DrawText(Player.Current, 0, 52);
-                if (ShowStation > 0)
-                {
-                    ShowStation--;
-                }
-            }
+            DrawTimeChar(tm[3], pos.X + off + 28, pos.Y);
+            DrawTimeChar(tm[4], pos.X + off + 48, pos.Y);
+            Display.FlushBuffer();
+        }
+
+        public static void DrawStationList()
+        {
+            Display.ClearFB();
+            DrawText(Player.PrevStation.Name, 8, 10);
+            DrawText(Player.CurrentStation.Name, 8, 26);
+            DrawText(Player.NextStation.Name, 8, 42);
+            DrawText("[", 0, 26);
+            DrawText("]", 122, 26);
             Display.FlushBuffer();
         }
 
@@ -177,7 +225,7 @@ namespace radio_app
         {
             if (c == ':')
             {
-                Display.g_fb.DrawImage(timeFont, new Rectangle(x, y, 4, 32), new Rectangle(170, 0, 4, 32), GraphicsUnit.Pixel);
+                Display.g_fb.DrawImage(timeFont, new Rectangle(x, y, 4, 31), new Rectangle(170, 0, 4, 31), GraphicsUnit.Pixel);
                 return;
             }
             if (c == ' ')
@@ -185,13 +233,14 @@ namespace radio_app
                 //g_fb.FillRectangle(new SolidBrush(Color.White), new Rectangle(x, y + 4, 4, 12));
                 return;
             }
-            Display.g_fb.DrawImage(timeFont, new Rectangle(x, y, 16, 32), new Rectangle((c - '0') * 17, 0, 16, 32), GraphicsUnit.Pixel);
+            Display.g_fb.DrawImage(timeFont, new Rectangle(x, y, 16, 31), new Rectangle((c - '0') * 17, 0, 16, 31), GraphicsUnit.Pixel);
         }
 
         public enum ScreenMode
         {
             Bootlogo,
             Home,
+            StationSelect,
             Menu,
             Torch,
             None
