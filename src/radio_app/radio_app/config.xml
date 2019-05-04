@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <config>
     <fonts>
-        <time>time_font.png</time>
+        <time space="4">time_font.png</time>
         <main>Dangen_charset_6x12.png</main>
     </fonts>
     <bootlogo pause="120">bootlogo.gif</bootlogo>

@@ -10,6 +10,8 @@ namespace radio_app
     {
         public static ScreenMode Mode = ScreenMode.None;
         static Bitmap timeFont, mainFont, bootlogo;
+        static int tf_w = 0, tf_h = 0, tf_dot_w = 0;
+        static int tf_space = 4;
         static int anim_pause = 100;
         static string mainCharset = " !\"#$%&'()*+,-./" +
                                     "0123456789:;<=>?" +
@@ -33,6 +35,10 @@ namespace radio_app
             XDocument config = XDocument.Load(config_path);
             XElement xfonts = config.Root.Element(XName.Get("fonts"));
             timeFont = new Bitmap(xfonts.Element(XName.Get("time")).Value);
+            tf_space = int.Parse(xfonts.Element(XName.Get("time")).Attribute(XName.Get("space")).Value);
+            tf_h = timeFont.Height;
+            tf_w = (timeFont.Width - 10) / 10;
+            tf_dot_w = (timeFont.Width - 10) % 10;
             mainFont = new Bitmap(xfonts.Element(XName.Get("main")).Value);
 
             XElement bootgif = config.Root.Element(XName.Get("bootlogo"));
@@ -90,7 +96,7 @@ namespace radio_app
 
             DateTime dt = DateTime.UtcNow.AddHours(3);
             string tm = dt.ToString("HH:mm");
-            int off = (tm[0] == '0') ? 0 : 20;
+            int off = (tm[0] == '0') ? 0 : tf_w + tf_space;
             #region Screensaver
             if ((dt - dt_prev).TotalSeconds > 0.9)
             {
@@ -100,12 +106,13 @@ namespace radio_app
 
                 if(vel.X > 0)
                 {
-                    if(pos.X + 64 + off > 127)
+                    int t_w = ((tf_w + tf_space) * 3) + tf_dot_w + off;
+                    if(pos.X + t_w > 127)
                     {
                         vel.X = -1;
-                        if(pos.X + 64 + off > 128)
+                        if(pos.X + t_w > 128)
                         {
-                            pos.X = 64 - off;
+                            pos.X = 128 - t_w;
                         }
                     }
                 }
@@ -118,7 +125,7 @@ namespace radio_app
                 }
                 if(vel.Y > 0)
                 {
-                    if (pos.Y + 31 > 63)
+                    if (pos.Y + tf_h > 63)
                     {
                         vel.Y = -1;
                     }
@@ -135,21 +142,26 @@ namespace radio_app
             #endregion
 
             Display.ClearFB();
+            int x = 0;
             if (off != 0)
             {
                 DrawTimeChar(tm[0], pos.X, pos.Y);
             }
-            DrawTimeChar(tm[1], pos.X + off, pos.Y);
+            x += off;
+            DrawTimeChar(tm[1], pos.X + x, pos.Y);
+            x += tf_w + tf_space;
             if (DateTime.UtcNow.Second % 2 == 0)
             {
-                DrawTimeChar(' ', pos.X + off + 20, pos.Y);
+                DrawTimeChar(' ', pos.X + x, pos.Y);
             }
             else
             {
-                DrawTimeChar(':', pos.X + off + 20, pos.Y);
+                DrawTimeChar(':', pos.X + x, pos.Y);
             }
-            DrawTimeChar(tm[3], pos.X + off + 28, pos.Y);
-            DrawTimeChar(tm[4], pos.X + off + 48, pos.Y);
+            x += tf_dot_w + tf_space;
+            DrawTimeChar(tm[3], pos.X + x, pos.Y);
+            x += tf_w + tf_space;
+            DrawTimeChar(tm[4], pos.X + x, pos.Y);
             Display.FlushBuffer();
         }
 
@@ -225,7 +237,7 @@ namespace radio_app
         {
             if (c == ':')
             {
-                Display.g_fb.DrawImage(timeFont, new Rectangle(x, y, 4, 31), new Rectangle(170, 0, 4, 31), GraphicsUnit.Pixel);
+                Display.g_fb.DrawImage(timeFont, new Rectangle(x, y, tf_dot_w, tf_h), new Rectangle((tf_w + 1) * 10, 0, tf_dot_w, tf_h), GraphicsUnit.Pixel);
                 return;
             }
             if (c == ' ')
@@ -233,7 +245,7 @@ namespace radio_app
                 //g_fb.FillRectangle(new SolidBrush(Color.White), new Rectangle(x, y + 4, 4, 12));
                 return;
             }
-            Display.g_fb.DrawImage(timeFont, new Rectangle(x, y, 16, 31), new Rectangle((c - '0') * 17, 0, 16, 31), GraphicsUnit.Pixel);
+            Display.g_fb.DrawImage(timeFont, new Rectangle(x, y, tf_w, tf_h), new Rectangle((c - '0') * (tf_w + 1), 0, tf_w, tf_h), GraphicsUnit.Pixel);
         }
 
         public enum ScreenMode
