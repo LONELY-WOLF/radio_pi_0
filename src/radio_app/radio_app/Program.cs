@@ -7,6 +7,7 @@ using HidSharp.Reports.Input;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using radio_app.Modes;
 
 namespace radio_app
 {
@@ -93,41 +94,7 @@ namespace radio_app
                 if (inputReportBuffer[1] != 0)
                 {
                     Console.WriteLine(inputReportBuffer[1]);
-                    switch (inputReportBuffer[1])
-                    {
-                        case 35:
-                            {
-                                Console.WriteLine("Home");
-                                break;
-                            }
-                        case 36:
-                            {
-                                Console.WriteLine("Back");
-                                break;
-                            }
-                        case 205:
-                            {
-                                Player.PlayStop();
-                                ScreenManager.ShowStation = 3;
-                                ScreenManager.DrawStationList();
-                                break;
-                            }
-                        case 226:
-                            {
-                                Process.Start("amixer", "-q sset \"Line Out\" toggle");
-                                break;
-                            }
-                        case 233:
-                            {
-                                Process.Start("amixer", "-q -M sset \"Line Out\" 1%+");
-                                break;
-                            }
-                        case 234:
-                            {
-                                Process.Start("amixer", "-q -M sset \"Line Out\" 1%-");
-                                break;
-                            }
-                    }
+                    ModeTable.CurrentMode.InputM(inputReportBuffer[1]);
                 }
             }
         }
@@ -142,68 +109,7 @@ namespace radio_app
                 if (inputReportBuffer[3] != 0)
                 {
                     Console.WriteLine(inputReportBuffer[3]);
-                    switch (inputReportBuffer[3])
-                    {
-                        case 40:
-                            {
-                                Console.WriteLine("Ok");
-                                switch (ScreenManager.Mode)
-                                {
-                                    case ScreenManager.ScreenMode.Home:
-                                        {
-                                            ScreenManager.SetTorchMode(true);
-                                            break;
-                                        }
-                                    case ScreenManager.ScreenMode.Torch:
-                                        {
-                                            ScreenManager.SetTorchMode(false);
-                                            break;
-                                        }
-                                }
-                                break;
-                            }
-                        case 75:
-                            {
-                                Console.WriteLine("PgUp");
-                                Player.Prev();
-                                ScreenManager.ShowStation = 3;
-                                ScreenManager.DrawStationList();
-                                break;
-                            }
-                        case 78:
-                            {
-                                Console.WriteLine("PgDn");
-                                Player.Next();
-                                ScreenManager.ShowStation = 3;
-                                ScreenManager.DrawStationList();
-                                break;
-                            }
-                        case 79:
-                            {
-                                Console.WriteLine("Right");
-                                break;
-                            }
-                        case 80:
-                            {
-                                Console.WriteLine("Left");
-                                break;
-                            }
-                        case 81:
-                            {
-                                Console.WriteLine("Down");
-                                break;
-                            }
-                        case 82:
-                            {
-                                Console.WriteLine("Up");
-                                break;
-                            }
-                        case 101:
-                            {
-                                Console.WriteLine("Menu");
-                                break;
-                            }
-                    }
+                    ModeTable.CurrentMode.InputQ(inputReportBuffer[3]);
                 }
             }
         }
