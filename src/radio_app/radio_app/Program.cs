@@ -7,7 +7,7 @@ using HidSharp.Reports.Input;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
-using radio_app.Modes;
+using radio_app.Pages;
 
 namespace radio_app
 {
@@ -94,7 +94,7 @@ namespace radio_app
                 if (inputReportBuffer[1] != 0)
                 {
                     Console.WriteLine(inputReportBuffer[1]);
-                    ModeTable.CurrentMode.InputM(inputReportBuffer[1]);
+                    PageTable.CurrentPage.InputM(inputReportBuffer[1]);
                 }
             }
         }
@@ -109,7 +109,7 @@ namespace radio_app
                 if (inputReportBuffer[3] != 0)
                 {
                     Console.WriteLine(inputReportBuffer[3]);
-                    ModeTable.CurrentMode.InputQ(inputReportBuffer[3]);
+                    PageTable.CurrentPage.InputQ(inputReportBuffer[3]);
                 }
             }
         }

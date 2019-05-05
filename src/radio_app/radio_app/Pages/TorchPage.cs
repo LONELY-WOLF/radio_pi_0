@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Timers;
 
-namespace radio_app.Modes
+namespace radio_app.Pages
 {
-    public class TorchMode : ScreenMode
+    public class TorchPage : ScreenPage
     {
         byte torch_brightness;
         Timer torch_timer;
 
-        public TorchMode(int torch_duration, byte torch_brightness)
+        public TorchPage(int torch_duration, byte torch_brightness)
         {
             this.torch_brightness = torch_brightness;
             torch_timer = new Timer(torch_duration * 1000);
@@ -38,7 +38,7 @@ namespace radio_app.Modes
             {
                 case 40: //OK
                     {
-                        ModeTable.HomeMode.Enter();
+                        PageTable.HomePage.Enter();
                         break;
                     }
                 case 75: //PgUp
@@ -61,7 +61,7 @@ namespace radio_app.Modes
 
         void Torch_Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            ModeTable.HomeMode.Enter();
+            PageTable.HomePage.Enter();
         }
     }
 }

@@ -35,12 +35,13 @@
     <Compile Include="Display.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="ScreenManager.cs" />
-    <Compile Include="Modes\ScreenMode.cs" />
-    <Compile Include="Modes\HomeMode.cs" />
-    <Compile Include="Modes\ModeTable.cs" />
-    <Compile Include="Modes\TorchMode.cs" />
-    <Compile Include="Modes\StationSelectMode.cs" />
-    <Compile Include="Modes\BootLogoMode.cs" />
+    <Compile Include="Pages\ScreenPage.cs" />
+    <Compile Include="Pages\HomePage.cs" />
+    <Compile Include="Pages\PageTable.cs" />
+    <Compile Include="Pages\TorchPage.cs" />
+    <Compile Include="Pages\StationSelectPage.cs" />
+    <Compile Include="Pages\BootLogoPage.cs" />
+    <Compile Include="BitFont.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.xml">
@@ -48,7 +49,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Modes\" />
+    <Folder Include="Pages\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

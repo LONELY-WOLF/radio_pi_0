@@ -171,6 +171,15 @@ namespace radio_app
             mtx.ReleaseMutex();
         }
 
+        public static void DrawText(string text, int x, int y, BitFont font)
+        {
+            for (int i = 0; i < text.Length; i++)
+            {
+                Rectangle r = font.GetChar(text[i]);
+                DrawImage(font.Image, new Rectangle(x + (i * r.Size.Width), y, r.Size.Width, r.Size.Height), r, GraphicsUnit.Pixel);
+            }
+        }
+
         public static void DrawDirect(Bitmap img)
         {
             mtx.WaitOne();

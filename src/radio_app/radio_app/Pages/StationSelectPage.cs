@@ -1,11 +1,11 @@
 ﻿using System;
-namespace radio_app.Modes
+namespace radio_app.Pages
 {
-    public class StationSelectMode : ScreenMode
+    public class StationSelectPage : ScreenPage
     {
         int duration;
 
-        public StationSelectMode()
+        public StationSelectPage()
         {
         }
 
@@ -18,19 +18,19 @@ namespace radio_app.Modes
 
         public override void Draw()
         {
-            if (ModeTable.CurrentMode != this) return;
+            if (PageTable.CurrentPage != this) return;
 
             if (duration-- == 0)
             {
-                pMode.Enter();
+                pPage.Enter();
                 return;
             }
             Display.ClearFB();
-            ScreenManager.DrawText(Player.PrevStation.Name, 8, 10);
-            ScreenManager.DrawText(Player.CurrentStation.Name, 8, 26);
-            ScreenManager.DrawText(Player.NextStation.Name, 8, 42);
-            ScreenManager.DrawText("[", 0, 26);
-            ScreenManager.DrawText("]", 122, 26);
+            Display.DrawText(Player.PrevStation.Name, 8, 10, ScreenManager.mainFont);
+            Display.DrawText(Player.CurrentStation.Name, 8, 26, ScreenManager.mainFont);
+            Display.DrawText(Player.NextStation.Name, 8, 42, ScreenManager.mainFont);
+            Display.DrawText("[", 0, 26, ScreenManager.mainFont);
+            Display.DrawText("]", 122, 26, ScreenManager.mainFont);
             Display.FlushBuffer();
         }
 
@@ -40,7 +40,7 @@ namespace radio_app.Modes
             {
                 case 35:
                     {
-                        ModeTable.HomeMode.Enter();
+                        PageTable.HomePage.Enter();
                         break;
                     }
                 default:

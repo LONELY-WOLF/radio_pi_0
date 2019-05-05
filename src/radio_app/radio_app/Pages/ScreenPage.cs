@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace radio_app.Modes
+namespace radio_app.Pages
 {
-    public class ScreenMode
+    public class ScreenPage
     {
-        protected ScreenMode pMode = null;
+        protected ScreenPage pPage = null;
 
-        public ScreenMode()
+        public ScreenPage()
         {
         }
 
         public virtual void Enter()
         {
-            ModeTable.CurrentMode.Exit();
-            pMode = ModeTable.CurrentMode;
-            ModeTable.CurrentMode = this;
+            PageTable.CurrentPage.Exit();
+            pPage = PageTable.CurrentPage;
+            PageTable.CurrentPage = this;
         }
 
         public virtual void Exit()

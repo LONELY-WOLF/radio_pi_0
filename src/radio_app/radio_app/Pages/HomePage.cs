@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
 
-namespace radio_app.Modes
+namespace radio_app.Pages
 {
-    public class HomeMode : ScreenMode
+    public class HomePage : ScreenPage
     {
         Point pos = new Point(0, 0);
         Point vel = new Point(1, 1);
@@ -12,7 +12,7 @@ namespace radio_app.Modes
         int tf_w = 0, tf_h = 0, tf_dot_w = 0;
         int tf_space = 4;
 
-        public HomeMode(Bitmap timeFont, int space_width)
+        public HomePage(Bitmap timeFont, int space_width)
         {
             this.timeFont = timeFont;
             tf_h = timeFont.Height;
@@ -34,7 +34,7 @@ namespace radio_app.Modes
 
         public override void Draw()
         {
-            if (ModeTable.CurrentMode != this) return;
+            if (PageTable.CurrentPage != this) return;
 
             DateTime dt = DateTime.UtcNow.AddHours(3);
             string tm = dt.ToString("HH:mm");
@@ -113,19 +113,19 @@ namespace radio_app.Modes
             {
                 case 40: //OK
                     {
-                        ModeTable.TorchMode.Enter();
+                        PageTable.TorchPage.Enter();
                         break;
                     }
                 case 75: //PgUp
                     {
                         Player.Prev();
-                        ModeTable.StationSelectMode.Enter();
+                        PageTable.StationSelectPage.Enter();
                         break;
                     }
                 case 78: //PgDn
                     {
                         Player.Next();
-                        ModeTable.StationSelectMode.Enter();
+                        PageTable.StationSelectPage.Enter();
                         break;
                     }
                 default:
