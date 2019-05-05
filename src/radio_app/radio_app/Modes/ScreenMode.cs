@@ -13,7 +13,6 @@ namespace radio_app.Modes
 
         public virtual void Enter()
         {
-            Draw();
             ModeTable.CurrentMode.Exit();
             pMode = ModeTable.CurrentMode;
             ModeTable.CurrentMode = this;

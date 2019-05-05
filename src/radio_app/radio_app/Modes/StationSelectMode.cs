@@ -11,9 +11,9 @@ namespace radio_app.Modes
 
         public override void Enter()
         {
-            base.Enter();
-
             duration = 3;
+            base.Enter();
+            Draw();
         }
 
         public override void Draw()
@@ -23,6 +23,7 @@ namespace radio_app.Modes
             if (duration-- == 0)
             {
                 pMode.Enter();
+                return;
             }
             Display.ClearFB();
             ScreenManager.DrawText(Player.PrevStation.Name, 8, 10);

@@ -24,6 +24,7 @@ namespace radio_app.Modes
         public override void Enter()
         {
             base.Enter();
+            Draw();
         }
 
         public override void Exit()
