@@ -7,7 +7,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>radio_app</RootNamespace>
     <AssemblyName>radio_app</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>false</DebugSymbols>
@@ -23,11 +23,11 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
-    <Reference Include="HidSharp">
-      <HintPath>..\..\bin\HidSharp.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
+    <Reference Include="HidSharp">
+      <HintPath>bin\Debug\HidSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -35,11 +35,20 @@
     <Compile Include="Display.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="ScreenManager.cs" />
+    <Compile Include="Modes\ScreenMode.cs" />
+    <Compile Include="Modes\HomeMode.cs" />
+    <Compile Include="Modes\ModeTable.cs" />
+    <Compile Include="Modes\TorchMode.cs" />
+    <Compile Include="Modes\StationSelectMode.cs" />
+    <Compile Include="Modes\BootLogoMode.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Modes\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
