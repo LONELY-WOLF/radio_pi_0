@@ -102,7 +102,7 @@ namespace radio_app
                 if (cx == -1) continue;
                 int cy = cx / 16;
                 cx = cx % 16;
-                Display.g_fb.DrawImage(mainFont, new Rectangle(x + (i * 6), y, 6, 12), new Rectangle(cx * 6, cy * 12, 6, 12), GraphicsUnit.Pixel);
+                Display.DrawImage(mainFont, new Rectangle(x + (i * 6), y, 6, 12), new Rectangle(cx * 6, cy * 12, 6, 12), GraphicsUnit.Pixel);
             }
         }
 

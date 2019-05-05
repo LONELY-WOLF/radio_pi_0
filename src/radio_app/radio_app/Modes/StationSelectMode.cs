@@ -18,6 +18,8 @@ namespace radio_app.Modes
 
         public override void Draw()
         {
+            if (ModeTable.CurrentMode != this) return;
+
             if (duration-- == 0)
             {
                 pMode.Enter();

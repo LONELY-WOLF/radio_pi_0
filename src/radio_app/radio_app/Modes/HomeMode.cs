@@ -33,6 +33,8 @@ namespace radio_app.Modes
 
         public override void Draw()
         {
+            if (ModeTable.CurrentMode != this) return;
+
             DateTime dt = DateTime.UtcNow.AddHours(3);
             string tm = dt.ToString("HH:mm");
             int off = (tm[0] == '0') ? 0 : tf_w + tf_space;
@@ -137,7 +139,7 @@ namespace radio_app.Modes
         {
             if (c == ':')
             {
-                Display.g_fb.DrawImage(timeFont, new Rectangle(x, y, tf_dot_w, tf_h), new Rectangle((tf_w + 1) * 10, 0, tf_dot_w, tf_h), GraphicsUnit.Pixel);
+                Display.DrawImage(timeFont, new Rectangle(x, y, tf_dot_w, tf_h), new Rectangle((tf_w + 1) * 10, 0, tf_dot_w, tf_h), GraphicsUnit.Pixel);
                 return;
             }
             if (c == ' ')
@@ -145,7 +147,7 @@ namespace radio_app.Modes
                 //g_fb.FillRectangle(new SolidBrush(Color.White), new Rectangle(x, y + 4, 4, 12));
                 return;
             }
-            Display.g_fb.DrawImage(timeFont, new Rectangle(x, y, tf_w, tf_h), new Rectangle((c - '0') * (tf_w + 1), 0, tf_w, tf_h), GraphicsUnit.Pixel);
+            Display.DrawImage(timeFont, new Rectangle(x, y, tf_w, tf_h), new Rectangle((c - '0') * (tf_w + 1), 0, tf_w, tf_h), GraphicsUnit.Pixel);
         }
     }
 }

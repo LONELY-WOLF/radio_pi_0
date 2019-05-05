@@ -11,7 +11,7 @@ namespace radio_app
     {
         static FileStream spi;
         static Bitmap fb;
-        public static Graphics g_fb;
+        static Graphics g_fb;
         static Mutex mtx = new Mutex();
 
         public static void Init()
@@ -158,6 +158,15 @@ namespace radio_app
             mtx.WaitOne();
 
             g_fb.DrawImageUnscaled(img, x, y);
+
+            mtx.ReleaseMutex();
+        }
+
+        public static void DrawImage(Bitmap image, Rectangle destRect, Rectangle srcRect, GraphicsUnit srcUnit)
+        {
+            mtx.WaitOne();
+
+            g_fb.DrawImage(image, destRect, srcRect, srcUnit);
 
             mtx.ReleaseMutex();
         }
