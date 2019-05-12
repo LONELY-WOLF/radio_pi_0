@@ -50,6 +50,7 @@ namespace radio_app
             PageTable.TorchPage = new TorchPage(torch_duration, torch_brightness);
             PageTable.BootLogoPage = new BootLogoPage();
             PageTable.StationSelectPage = new StationSelectPage();
+            PageTable.StationInfoPage = new StationInfoPage();
         }
 
         static void Home_Timer_Elapsed(object sender, ElapsedEventArgs e)

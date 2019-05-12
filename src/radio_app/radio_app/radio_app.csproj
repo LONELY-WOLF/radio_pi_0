@@ -42,6 +42,8 @@
     <Compile Include="Pages\StationSelectPage.cs" />
     <Compile Include="Pages\BootLogoPage.cs" />
     <Compile Include="BitFont.cs" />
+    <Compile Include="Pages\TimeoutPage.cs" />
+    <Compile Include="Pages\StationInfoPage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.xml">

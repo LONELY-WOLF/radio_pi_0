@@ -18,6 +18,8 @@ namespace radio_app
             size.Height = Image.Height / charset.Length;
         }
 
+        public Size Size { get => size; }
+
         public Rectangle GetChar(char c)
         {
             for (int cy = 0; cy < charset.Length; cy++)

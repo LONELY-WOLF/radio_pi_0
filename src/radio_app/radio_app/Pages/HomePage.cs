@@ -107,6 +107,27 @@ namespace radio_app.Pages
             Display.FlushBuffer();
         }
 
+        public override void InputM(byte key)
+        {
+            switch(key)
+            {
+                case 205:
+                    {
+                        if(Player.IsPlaying)
+                        {
+                            PageTable.StationInfoPage.Station = "Radio: off";
+                        }
+                        else
+                        {
+                            PageTable.StationInfoPage.Station = Player.CurrentStation.Name;
+                        }
+                        PageTable.StationInfoPage.Enter();
+                        break;
+                    }
+            }
+            base.InputM(key);
+        }
+
         public override void InputQ(byte key)
         {
             switch (key)
