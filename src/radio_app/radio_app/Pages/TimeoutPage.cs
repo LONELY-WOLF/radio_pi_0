@@ -16,15 +16,16 @@ namespace radio_app.Pages
             base.Enter();
         }
 
-        public override void Draw()
+        public override int Draw()
         {
-            if (PageTable.CurrentPage != this) return;
+            if (base.Draw() != 0) return -1;
 
             if (d_cnt-- == 0)
             {
                 pPage.Enter();
-                return;
+                return -1;
             }
+            return 0;
         }
 
         public override void InputM(byte key)

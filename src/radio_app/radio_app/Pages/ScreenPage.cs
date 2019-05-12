@@ -23,9 +23,10 @@ namespace radio_app.Pages
 
         }
 
-        public virtual void Draw()
+        public virtual int Draw()
         {
-
+            if (PageTable.CurrentPage != this) return -1;
+            return 0;
         }
 
         public virtual void InputM(byte key)

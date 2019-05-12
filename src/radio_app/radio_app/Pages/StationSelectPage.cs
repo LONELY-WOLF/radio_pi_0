@@ -16,14 +16,14 @@ namespace radio_app.Pages
             Draw();
         }
 
-        public override void Draw()
+        public override int Draw()
         {
-            if (PageTable.CurrentPage != this) return;
+            if (base.Draw() != 0) return -1;
 
-            if (duration-- == 0)
+            if (duration-- <= 0)
             {
                 pPage.Enter();
-                return;
+                return -1;
             }
             Display.ClearFB();
             Display.DrawText(Player.PrevStation.Name, 8, 10, ScreenManager.mainFont);
@@ -32,6 +32,7 @@ namespace radio_app.Pages
             Display.DrawText("[", 0, 26, ScreenManager.mainFont);
             Display.DrawText("]", 122, 26, ScreenManager.mainFont);
             Display.FlushBuffer();
+            return 0;
         }
 
         public override void InputM(byte key)

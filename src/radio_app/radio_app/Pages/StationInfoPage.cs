@@ -15,11 +15,9 @@ namespace radio_app.Pages
             Draw();
         }
 
-        public override void Draw()
+        public override int Draw()
         {
-            base.Draw();
-
-            if (d_cnt <= 0) return;
+            if (base.Draw() != 0) return -1;
 
             int l = Station.Length * ScreenManager.mainFont.Size.Width;
             int off = (l > 128) ? 0 : (128 - l) / 2;
@@ -27,6 +25,7 @@ namespace radio_app.Pages
             Display.ClearFB();
             Display.DrawText(Station, off, 26, ScreenManager.mainFont);
             Display.FlushBuffer();
+            return 0;
         }
     }
 }

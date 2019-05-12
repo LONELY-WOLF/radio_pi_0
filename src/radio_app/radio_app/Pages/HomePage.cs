@@ -32,9 +32,9 @@ namespace radio_app.Pages
 
         }
 
-        public override void Draw()
+        public override int Draw()
         {
-            if (PageTable.CurrentPage != this) return;
+            if (base.Draw() != 0) return -1;
 
             DateTime dt = DateTime.UtcNow.AddHours(3);
             string tm = dt.ToString("HH:mm");
@@ -105,6 +105,7 @@ namespace radio_app.Pages
             x += tf_w + tf_space;
             DrawTimeChar(tm[4], pos.X + x, pos.Y);
             Display.FlushBuffer();
+            return 0;
         }
 
         public override void InputM(byte key)
