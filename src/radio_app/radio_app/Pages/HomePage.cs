@@ -110,7 +110,7 @@ namespace radio_app.Pages
 
         public override void InputM(byte key)
         {
-            switch(key)
+            switch (key)
             {
                 case 205:
                     {
@@ -131,6 +131,15 @@ namespace radio_app.Pages
 
         public override void InputQ(byte key)
         {
+            if (key >= 30 && key <= 39)
+            {
+                int n = key - 30;
+                if (Player.PlayStation(n))
+                {
+                    PageTable.StationInfoPage.Station = Player.CurrentStation.Name;
+                    PageTable.StationInfoPage.Enter();
+                }
+            }
             switch (key)
             {
                 case 40: //OK

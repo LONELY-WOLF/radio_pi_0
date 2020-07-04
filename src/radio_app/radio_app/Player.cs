@@ -27,7 +27,14 @@ namespace radio_app
 
         static void ChangeItem()
         {
-            if (!IsPlaying) return;
+            if (IsPlaying)
+            {
+                PlayItem();
+            }
+        }
+
+        static void PlayItem()
+        {
             if (ffplay != null)
             {
                 ffplay.Refresh();
@@ -114,6 +121,17 @@ namespace radio_app
                 }
                 return playlist[i];
             }
+        }
+
+        public static bool PlayStation(int n)
+        {
+            if(n >= playlist.Count)
+            {
+                return false;
+            }
+            _current = playlist[n];
+            PlayItem();
+            return true;
         }
     }
 
