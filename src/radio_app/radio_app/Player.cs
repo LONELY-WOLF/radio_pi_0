@@ -45,6 +45,7 @@ namespace radio_app
                 }
             }
             ffplay = Process.Start("ffplay", ff_args + _current.Path);
+            IsPlaying = true;
         }
 
         public static void PlayStop()
